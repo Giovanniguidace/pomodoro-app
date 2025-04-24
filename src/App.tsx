@@ -1,9 +1,12 @@
 import React from 'react'
-import {Pomodoro} from "./components/pomodoro";
+import {Pomodoro} from "./pages/home/pomodoro";
+import './index.css'
 
 function App() {
     return (
+        <div className="base">
             <Pomodoro/>
+        </div>
     )
 }
 
