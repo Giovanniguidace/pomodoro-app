@@ -5,8 +5,7 @@ import './index.css'
 
 
 interface Props {
-    configureWork?: () => void;
-    configureRest?: () => void;
+    configureStartPomodoro?: () => void;
 }
 
 function configureWork(): void{
@@ -25,8 +24,7 @@ export function Options(props: Props): JSX.Element {
 
     return (
         <div className={"options"}>
-            <Button text={"Trabalhar"} className={"primary"} onClick={props.configureWork}></Button>
-            <Button text={"Descansar"} className={"primary"} onClick={props.configureRest}></Button>
+            <Button text={"Iniciar"} className={"primary"} onClick={props.configureStartPomodoro}></Button>
             <Button text={"Pausar"} className={"primary"} onClick={() => configurePlayPause()}></Button>
         </div>
 

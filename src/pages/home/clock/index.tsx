@@ -3,12 +3,13 @@ import './index.css'
 
 interface Props {
     startTimer: boolean;
+    setStartTimer: (timer: boolean) => void;
     totalSeconds: number;
-    setEndTimer: any;
+    setEndTimer: (timer: boolean) => void;
 }
 
 export function Clock(props: Props): JSX.Element {
-    const [count, setCount] = React.useState(props.totalSeconds);
+    const [count, setCount] = React.useState(0);
     const [timer, setTimer] = React.useState("00:00");
 
     const pomodoroTimer = useCallback((count: number) => {
@@ -30,19 +31,31 @@ export function Clock(props: Props): JSX.Element {
         setTimer(`${minutes}:${seconds}`);
     }, [])
 
+    const configureCount = useCallback(() => {
+        setCount(props.totalSeconds);
+    },[
+        setCount,
+        props.totalSeconds,
+    ]);
+
 
     useEffect(() => {
-        pomodoroTimer(count);
+        if(!props.startTimer){
+            configureCount();
+        }
+
         if(props.startTimer){
+            pomodoroTimer(count);
             const intervalId = setInterval(() => {
                 setCount((prev) => prev - 1);
             }, 1000);
+            if(count === 0){
+                props.setStartTimer(false);
+                props.setEndTimer(true);
+            }
             return () => clearInterval(intervalId);
         }
-        if(count === 0){
-            props.setEndTimer(true);
-        }
-    }, [props.startTimer, count, pomodoroTimer, props.setEndTimer]);
+    }, [props.startTimer, count, pomodoroTimer, props.setEndTimer, props.setStartTimer]);
 
     return (
         <>

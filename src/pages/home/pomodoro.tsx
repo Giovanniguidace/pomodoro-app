@@ -10,6 +10,7 @@ interface Props{
 }
 
 export function Pomodoro(props: Props): JSX.Element {
+    const [startPomodoro, setStartPomodoro] = React.useState(false);
     const [working, setWorking] = React.useState(false);
     const [resting, setResting] = React.useState(false);
     const [status, setStatus] = React.useState("");
@@ -22,68 +23,90 @@ export function Pomodoro(props: Props): JSX.Element {
 
     /*AJUSTANDO O CLOCK EM RELAÇÃO AO TÉRMINO DO CRONOMETRO*/
 
-    const configureWork = useCallback(() => {
+    const configureClock = useCallback((seconds: number) => {
+        setEndTimer(false);
+        setTotalSeconds(seconds);
+        setStartTimer(true);
+    },[
+        setStartTimer,
+        setEndTimer,
+        setTotalSeconds,
+    ])
+
+    const configureStartPomodoro = useCallback(() => {
             setWorking(true);
             setResting(false);
-            setStartTimer(true);
+            document.body.classList.add('working');
+            setStatus("Trabalhando")
+            configureClock(5);
         }, [
+            setStartTimer,
             setWorking,
             setResting,
-            setStartTimer
+            configureClock,
         ]
     );
 
-    const configureRest = useCallback(() => {
-            setWorking(false);
+    const configureRest = useCallback((endTimer: boolean) => {
+        if(endTimer){
+            document.body.classList.remove('working');
+            setStatus("Descansando")
             setResting(true);
-            setStartTimer(false);
+            setWorking(false);
+            configureClock(5);
+        }
+    }, [
+        setStatus,
+        setResting,
+        setWorking,
+        configureClock
+    ])
+
+    const configureWork = useCallback((endTimer: boolean) => {
+        if(endTimer) {
+            document.body.classList.add('working');
+            setStatus("Trabalhando")
+            setWorking(true);
+            setResting(false);
+            configureClock(5);
+        }
         }, [
-            setWorking,
+            setStatus,
             setResting,
-            setStartTimer
+            setWorking,
+            configureClock
         ]
     );
 
     useEffect(() => {
-        if(working){
-            document.body.classList.add('working');
-            setStatus("Trabalhando")
+       if(working){
+            configureRest(endTimer);
+           console.log("Working");
         }
+
         if(resting){
-            document.body.classList.remove('working');
-            setStatus("Descansando")
-        }
-
-        if(endTimer && totalSeconds == 5){
-            setStartTimer(false);
-            setCompletedCycles(completedCycles+1);
-            setFullWorkingTime(fullWorkingTime+25);
-            setTotalSeconds(300);
-            setEndTimer(false);
-            setStartTimer(true);
-        }
-
-        if(endTimer && totalSeconds == 2){
-            setStartTimer(false);
-            setTotalSeconds(1500);
-            setEndTimer(false);
-            setStartTimer(true);
+            console.log("Resting");
+            configureWork(endTimer);
         }
 
     }, [
         working,
-        resting
+        resting,
+        endTimer,
+        configureRest,
+        configureWork,
     ]);
     return (
         <div className="pomodoro">
             <Status status={status}></Status>
             <Clock
                 startTimer={startTimer}
+                setStartTimer={setStartTimer}
                 setEndTimer={setEndTimer}
                 totalSeconds={totalSeconds}
             >
             </Clock>
-            <Options configureRest={configureRest} configureWork={configureWork} ></Options>
+            <Options configureStartPomodoro={configureStartPomodoro}></Options>
 
     </div>)
 }
