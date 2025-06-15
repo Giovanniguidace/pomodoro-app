@@ -6,6 +6,7 @@ interface Props {
     setStartTimer: (timer: boolean) => void;
     totalSeconds: number;
     setEndTimer: (timer: boolean) => void;
+    playPausePomodoro: boolean;
 }
 
 export function Clock(props: Props): JSX.Element {
@@ -45,17 +46,19 @@ export function Clock(props: Props): JSX.Element {
         }
 
         if(props.startTimer){
-            pomodoroTimer(count);
-            const intervalId = setInterval(() => {
-                setCount((prev) => prev - 1);
-            }, 1000);
-            if(count === 0){
-                props.setStartTimer(false);
-                props.setEndTimer(true);
+            if(!props.playPausePomodoro){
+                pomodoroTimer(count);
+                const intervalId = setInterval(() => {
+                    setCount((prev) => prev - 1);
+                }, 1000);
+                if(count === 0){
+                    props.setStartTimer(false);
+                    props.setEndTimer(true);
+                }
+                return () => clearInterval(intervalId);
             }
-            return () => clearInterval(intervalId);
         }
-    }, [props.startTimer, count, pomodoroTimer, props.setEndTimer, props.setStartTimer]);
+    }, [props.startTimer, count, pomodoroTimer, props.setEndTimer, props.setStartTimer, props.playPausePomodoro]);
 
     return (
         <>

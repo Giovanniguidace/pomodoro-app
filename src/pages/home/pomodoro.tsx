@@ -11,6 +11,7 @@ interface Props{
 
 export function Pomodoro(props: Props): JSX.Element {
     const [startPomodoro, setStartPomodoro] = React.useState(false);
+    const [playPausePomodoro, setPlayPausePomodoro] = React.useState(false);
     const [working, setWorking] = React.useState(false);
     const [resting, setResting] = React.useState(false);
     const [status, setStatus] = React.useState("");
@@ -40,12 +41,22 @@ export function Pomodoro(props: Props): JSX.Element {
             setStatus("Trabalhando")
             configureClock(5);
         }, [
-            setStartTimer,
             setWorking,
             setResting,
             configureClock,
         ]
     );
+
+    const configurePlayPausePomodoro = useCallback(() => {
+        if(playPausePomodoro){
+            setPlayPausePomodoro(false);
+        }else{
+            setPlayPausePomodoro(true);
+        }
+    }, [
+        setPlayPausePomodoro,
+        playPausePomodoro
+    ])
 
     const configureRest = useCallback((endTimer: boolean) => {
         if(endTimer){
@@ -95,6 +106,7 @@ export function Pomodoro(props: Props): JSX.Element {
         endTimer,
         configureRest,
         configureWork,
+        playPausePomodoro,
     ]);
     return (
         <div className="pomodoro">
@@ -104,9 +116,9 @@ export function Pomodoro(props: Props): JSX.Element {
                 setStartTimer={setStartTimer}
                 setEndTimer={setEndTimer}
                 totalSeconds={totalSeconds}
+                playPausePomodoro={playPausePomodoro}
             >
             </Clock>
-            <Options configureStartPomodoro={configureStartPomodoro}></Options>
-
+            <Options configureStartPomodoro={configureStartPomodoro} configurePlayPausePomodoro={configurePlayPausePomodoro} playPausePomodoro={playPausePomodoro}></Options>
     </div>)
 }

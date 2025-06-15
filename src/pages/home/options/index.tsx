@@ -6,18 +6,8 @@ import './index.css'
 
 interface Props {
     configureStartPomodoro?: () => void;
-}
-
-function configureWork(): void{
-
-}
-
-function configureRest(): void{
-
-}
-
-function configurePlayPause(): void{
-
+    configurePlayPausePomodoro?: () => void;
+    playPausePomodoro: boolean;
 }
 
 export function Options(props: Props): JSX.Element {
@@ -25,7 +15,7 @@ export function Options(props: Props): JSX.Element {
     return (
         <div className={"options"}>
             <Button text={"Iniciar"} className={"primary"} onClick={props.configureStartPomodoro}></Button>
-            <Button text={"Pausar"} className={"primary"} onClick={() => configurePlayPause()}></Button>
+            <Button text={props.playPausePomodoro ? "Reiniciar" : "Pausar"} className={"primary"} onClick={props.configurePlayPausePomodoro}></Button>
         </div>
 
     )
