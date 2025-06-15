@@ -119,6 +119,6 @@ export function Pomodoro(props: Props): JSX.Element {
                 playPausePomodoro={playPausePomodoro}
             >
             </Clock>
-            <Options configureStartPomodoro={configureStartPomodoro} configurePlayPausePomodoro={configurePlayPausePomodoro} playPausePomodoro={playPausePomodoro}></Options>
+            <Options configureStartPomodoro={configureStartPomodoro} configurePlayPausePomodoro={configurePlayPausePomodoro} playPausePomodoro={playPausePomodoro} restPomodoro={resting} workingPomodoro={working}></Options>
     </div>)
 }
