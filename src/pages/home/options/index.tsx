@@ -16,9 +16,14 @@ export function Options(props: Props): JSX.Element {
 
     return (
         <div className={"options"}>
-            {(props.workingPomodoro || props.restPomodoro) ? <></> : <Button text={"Iniciar"} className={"primary"} onClick={props.configureStartPomodoro}></Button>}
-            <Button text={props.playPausePomodoro ? "Reiniciar" : "Pausar"} className={"primary"} onClick={props.configurePlayPausePomodoro}></Button>
+            {(props.workingPomodoro || props.restPomodoro)
+                ?
+                <Button
+                    text={props.playPausePomodoro ? "Reiniciar" : "Pausar"} className={"primary"}
+                    onClick={props.configurePlayPausePomodoro}></Button>
+                :
+                <Button text={"Iniciar"} className={"primary"}
+                        onClick={props.configureStartPomodoro}></Button>}
         </div>
-
     )
 }
