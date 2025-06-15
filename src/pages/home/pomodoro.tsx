@@ -10,19 +10,18 @@ interface Props{
 }
 
 export function Pomodoro(props: Props): JSX.Element {
-    const [startPomodoro, setStartPomodoro] = React.useState(false);
     const [playPausePomodoro, setPlayPausePomodoro] = React.useState(false);
     const [working, setWorking] = React.useState(false);
     const [resting, setResting] = React.useState(false);
     const [status, setStatus] = React.useState("");
     const [startTimer, setStartTimer] = React.useState(false);
     const [endTimer, setEndTimer] = React.useState(false);
-    const [totalSeconds, setTotalSeconds] = React.useState(5);
+    const secondsWorking = 11;
+    const secondsResting = 11;
+    const [totalSeconds, setTotalSeconds] = React.useState(secondsWorking);
     const [completedCycles, setCompletedCycles] = React.useState(0);
     const [fullWorkingTime, setFullWorkingTime] = React.useState(0);
     const [numberOfPomodoros, setNumberOfPomodoros] = React.useState(0);
-
-    /*AJUSTANDO O CLOCK EM RELAÇÃO AO TÉRMINO DO CRONOMETRO*/
 
     const configureClock = useCallback((seconds: number) => {
         setEndTimer(false);
@@ -39,7 +38,7 @@ export function Pomodoro(props: Props): JSX.Element {
             setResting(false);
             document.body.classList.add('working');
             setStatus("Trabalhando")
-            configureClock(5);
+            configureClock(secondsWorking);
         }, [
             setWorking,
             setResting,
@@ -64,7 +63,7 @@ export function Pomodoro(props: Props): JSX.Element {
             setStatus("Descansando")
             setResting(true);
             setWorking(false);
-            configureClock(5);
+            configureClock(secondsResting);
         }
     }, [
         setStatus,
@@ -79,7 +78,7 @@ export function Pomodoro(props: Props): JSX.Element {
             setStatus("Trabalhando")
             setWorking(true);
             setResting(false);
-            configureClock(5);
+            configureClock(secondsWorking);
         }
         }, [
             setStatus,
@@ -89,10 +88,25 @@ export function Pomodoro(props: Props): JSX.Element {
         ]
     );
 
+    const addCompletedCycles = useCallback(() => {
+        if(completedCycles === 4){
+            setNumberOfPomodoros(prev => prev + 1);
+            setCompletedCycles(0);
+        }else{
+            setCompletedCycles(prev => prev + 1);
+        }
+        setFullWorkingTime(number => ((number + secondsWorking + secondsResting) / 60))
+    }, [
+        completedCycles,
+        setCompletedCycles,
+        setNumberOfPomodoros,
+        setFullWorkingTime,
+    ])
+
     useEffect(() => {
        if(working){
             configureRest(endTimer);
-           console.log("Working");
+            console.log("Working");
         }
 
         if(resting){
@@ -106,7 +120,7 @@ export function Pomodoro(props: Props): JSX.Element {
         endTimer,
         configureRest,
         configureWork,
-        playPausePomodoro,
+        playPausePomodoro
     ]);
     return (
         <div className="pomodoro">
@@ -117,8 +131,23 @@ export function Pomodoro(props: Props): JSX.Element {
                 setEndTimer={setEndTimer}
                 totalSeconds={totalSeconds}
                 playPausePomodoro={playPausePomodoro}
+                resting={resting}
+                addCompletedCycles={addCompletedCycles}
             >
             </Clock>
-            <Options configureStartPomodoro={configureStartPomodoro} configurePlayPausePomodoro={configurePlayPausePomodoro} playPausePomodoro={playPausePomodoro} restPomodoro={resting} workingPomodoro={working}></Options>
+            <Options
+                configureStartPomodoro={configureStartPomodoro}
+                configurePlayPausePomodoro={configurePlayPausePomodoro}
+                playPausePomodoro={playPausePomodoro}
+                restPomodoro={resting}
+                workingPomodoro={working}
+            >
+            </Options>
+            <Details
+                completedCycles={completedCycles}
+                fullWorkingTime={fullWorkingTime}
+                numberOfPomodoros={numberOfPomodoros}
+            >
+            </Details>
     </div>)
 }

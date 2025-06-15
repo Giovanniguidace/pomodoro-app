@@ -1,4 +1,4 @@
-import React, {JSX, use, useCallback, useEffect} from "react";
+import React, {JSX, useCallback, useEffect} from "react";
 import './index.css'
 
 interface Props {
@@ -7,6 +7,8 @@ interface Props {
     totalSeconds: number;
     setEndTimer: (timer: boolean) => void;
     playPausePomodoro: boolean;
+    resting: boolean;
+    addCompletedCycles: () => void;
 }
 
 export function Clock(props: Props): JSX.Element {
@@ -22,14 +24,14 @@ export function Clock(props: Props): JSX.Element {
             return;
         }
         if(minutes === 0){
-            setTimer(`${minutes}0:${seconds}`);
+            setTimer(`${minutes}0:${seconds >= 10 ? seconds : '0' + seconds}`);
             return;
         }
         if(seconds === 0 && minutes === 0){
             setTimer(`${minutes}0:${seconds}0`);
             return;
         }
-        setTimer(`${minutes}:${seconds}`);
+        setTimer(`${minutes}:${seconds >= 10 ? seconds : '0' + seconds}`);
     }, [])
 
     const configureCount = useCallback(() => {
@@ -54,11 +56,19 @@ export function Clock(props: Props): JSX.Element {
                 if(count === 0){
                     props.setStartTimer(false);
                     props.setEndTimer(true);
+                    if(props.resting){
+                        props.addCompletedCycles();
+                    }
                 }
                 return () => clearInterval(intervalId);
             }
         }
-    }, [props.startTimer, count, pomodoroTimer, props.setEndTimer, props.setStartTimer, props.playPausePomodoro]);
+    }, [
+        count,
+        pomodoroTimer,
+        configureCount,
+        props
+    ]);
 
     return (
         <>

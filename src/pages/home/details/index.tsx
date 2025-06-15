@@ -3,17 +3,17 @@ import {Span} from "../../../components/Span";
 import './index.css'
 
 interface Props {
-    completedCycles: string;
-    fullWorkingTime: string;
-    numberOfPomodoros: string;
+    completedCycles: number;
+    fullWorkingTime: number;
+    numberOfPomodoros: number;
 }
 
 export function Details(props: Props): JSX.Element {
     return (
         <div className={"details"}>
-            <Span title={"Ciclos concluidos: "} text={props.completedCycles}></Span>
-            <Span title={"Horas Trabalhadas: "} text={props.fullWorkingTime}></Span>
-            <Span title={"Pomodoros concluidos: "} text={props.numberOfPomodoros}></Span>
+            <Span title={"Ciclos concluidos: "} text={props.completedCycles.toString()}></Span>
+            <Span title={"Horas Trabalhadas: "} text={props.fullWorkingTime.toFixed(2)}></Span>
+            <Span title={"Pomodoros concluidos: "} text={props.numberOfPomodoros.toString()}></Span>
         </div>
     );
 }

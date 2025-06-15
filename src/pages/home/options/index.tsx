@@ -1,4 +1,4 @@
-import React, {JSX, useCallback, useEffect} from 'react';
+import React, {JSX} from 'react';
 import {Button} from "../../../components/Button";
 import './index.css'
 
@@ -19,7 +19,7 @@ export function Options(props: Props): JSX.Element {
             {(props.workingPomodoro || props.restPomodoro)
                 ?
                 <Button
-                    text={props.playPausePomodoro ? "Reiniciar" : "Pausar"} className={"primary"}
+                    text={props.playPausePomodoro ? "Continuar" : "Pausar"} className={"primary"}
                     onClick={props.configurePlayPausePomodoro}></Button>
                 :
                 <Button text={"Iniciar"} className={"primary"}
